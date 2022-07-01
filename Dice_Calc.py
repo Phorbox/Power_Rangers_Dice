@@ -34,20 +34,20 @@ def Sum_Array(Array):
         total += each
     return total
 
-def Get_Result(N_Dice ,Rerolling = False, Discarding = False):
+def Get_Result(N_Dice ,Rerolling = False, Discarding = 0):
     if Discarding:
-        N_Dice = N_Dice*2
+        N_Dice = N_Dice+Discarding
     Array = Roll_Dice(N_Dice)
     if(Rerolling):
         Array = Reroll(Array)
-    if(Discarding):
-        Array = Discard_Lowest(Array,(N_Dice/2))
+    if(Discarding>0):
+        Array = Discard_Lowest(Array,Discarding)
     return Sum_Array(Array)
 
 def Count_Sim(Sim_Array, Damage):
     Sim_Array[Damage] += 1
 
-def Run_Sim(N_Rolls, N_Dice ,Rerolling = False, Discarding = False):
+def Run_Sim(N_Rolls, N_Dice ,Rerolling = False, Discarding = 0):
     i = 0
     Array = Make_Sim(N_Dice)
     while i < N_Rolls-(N_Dice*2)-1:
@@ -68,11 +68,17 @@ def Make_Sim(N_Dice):
 def Print_Super_Sim(Max_Dice):
     i = 1
     while i <= Max_Dice:
-        print("{} Dice".format(i))
-        print(Run_Sim(10000,i,False,False))
-        print(Run_Sim(10000,i,True,False))
-        print(Run_Sim(10000,i,False,True))
-        print(Run_Sim(10000,i,True,True))
+        print(f"{i} Dice")
+        j = 0
+        while(j <= 3):
+            Result = Run_Sim(10000,i,False,j)
+            print(f"{Result}")
+            j+=1
+        j = 0
+        while(j <= 3):
+            print(Run_Sim(10000,i,True,j))
+            j+=1
+
         i+=1
     return
 
@@ -127,7 +133,7 @@ def CSV_Super_Sim(Max_Dice):
     return 
 
 Print_Super_Sim(6)
-CSV_Super_Sim(6)
+# CSV_Super_Sim(6)
 
 # attack = Reroll(attack)
 # print(attack)
