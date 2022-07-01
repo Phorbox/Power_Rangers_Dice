@@ -54,7 +54,15 @@ def Run_Sim(N_Rolls, N_Dice ,Rerolling = False, Discarding = 0):
         tempy = Get_Result(N_Dice,Rerolling,Discarding)
         Array[tempy]+=1 
         i+=1
+    # Array = Run_Math(Array)
     return Array
+
+# def Run_Math(Array):
+#     i = 0
+#     while i < len(Array):
+#         Array[i] =         
+#         i+=1
+
 
 def Make_Sim(N_Dice):
     Array = []
@@ -72,11 +80,12 @@ def Print_Super_Sim(Max_Dice):
         j = 0
         while(j <= 3):
             Result = Run_Sim(10000,i,False,j)
-            print(f"{Result}")
+            print(f"Rerolling {False} | Discarding {j} | Result {Result}")
             j+=1
         j = 0
         while(j <= 3):
-            print(Run_Sim(10000,i,True,j))
+            Result = Run_Sim(10000,i,False,j)
+            print(f"Rerolling {False} | Discarding {j} | Result {Result}")
             j+=1
 
         i+=1
@@ -108,32 +117,29 @@ def CSV_Super_Sim(Max_Dice):
     File_Name ="SimFile.csv"
     File = open(File_Name,"w")
     i = 1
-    File.write(",,")
+    File.write("N_Dice,Rerolling,Discarding,")
     File.write(Array_to_Line(Sim_header(Max_Dice)))
     New_Line(File)
     while i <= Max_Dice:
-        # File.write("{} Dice\n".format(i))
-        File.write("{},Base,".format(i))
-        File.write(Array_to_Line(Run_Sim(10000,i,False,False)))
-        New_Line(File)
+        j = 0
+        while(j <= 3):
+            Result = Array_to_Line(Run_Sim(10000,i,False,j))
+            File.write(f"{i},{False},{j},{Result}")
+            New_Line(File)
+            j+=1
+        j = 0
+        while(j <= 3):
+            Result = Array_to_Line(Run_Sim(10000,i,True,j))
+            File.write(f"{i},{True},{j},{Result}")
+            New_Line(File)
+            j+=1
 
-        File.write(",Reroll,")
-        File.write(Array_to_Line(Run_Sim(10000,i,True,False)))
-        New_Line(File)
-
-        File.write(",Discard,")
-        File.write(Array_to_Line(Run_Sim(10000,i,False,True)))
-        New_Line(File)
-
-        File.write(",Both,")
-        File.write(Array_to_Line(Run_Sim(10000,i,True,True)))
-        New_Line(File)
         i+=1
     File.close()
     return 
 
 Print_Super_Sim(6)
-# CSV_Super_Sim(6)
+CSV_Super_Sim(6)
 
 # attack = Reroll(attack)
 # print(attack)
